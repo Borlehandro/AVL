@@ -103,6 +103,7 @@ int main() {
         fscanf(in, "%d ", &key);
         tree = Insert(tree, key);
     }
+    fclose(in);
     printf("%d", tree == NULL ? 0 : tree->height);
     return 0;
 }
