@@ -11,11 +11,17 @@ struct Node {
     uchar height;
 };
 
-void NewNode(Node *node) {
+Node* NewNode(int value) {
+    Node* node = malloc(sizeof(Node));
     node->left = NULL;
     node->right = NULL;
-    node->key = 0;
-    node->height = 0;
+    node->key = value;
+    node->height = 1;
+    return node;
+}
+
+void DeleteNode(Node* node){
+    free(node);
 }
 
 void FixHeight(Node *node) {
@@ -81,16 +87,27 @@ Node *Balance(Node *node) { /// Correct
 
 Node *Insert(Node *root, int value) {
     if (root == NULL) {
-        root = malloc(sizeof(Node));
-        NewNode(root);
-        root->key = value;
+        root=NewNode(value);
     } else {
         if (value < root->key)
             root->left = Insert(root->left, value);
-        else
+        else if(value > root->key)
             root->right = Insert(root->right, value);
     }
-    return Balance(root);
+    if(root->key!=value)
+        return Balance(root);
+    else
+        return root;
+}
+
+void CleanTree(Node* tree){
+    if(tree!=NULL) {
+        if (tree->left != NULL)
+            CleanTree(tree->left);
+        if (tree->right != NULL)
+            CleanTree(tree->right);
+        DeleteNode(tree);
+    }
 }
 
 int main() {
@@ -105,5 +122,6 @@ int main() {
     }
     fclose(in);
     printf("%d", tree == NULL ? 0 : tree->height);
+    CleanTree(tree);
     return 0;
 }
